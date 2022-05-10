@@ -1,0 +1,111 @@
+<div style="width:100%;height: 100vh; background: rgb(216, 229, 240);">
+  <div  style="width:100%;height:10%; background: #123a5a;display: flex;align-items: center;border-bottom: 3px solid #309BF2;">
+    <h1 style="padding-left:20px;color: white;"><strong style="padding-right: 50px;">POLI-TRABAJO</strong> <span style="font-style:italic ;">Tecnoexpert</span></h1>
+  </div>
+  <div style="width: 100%;height: 80%; padding-left:50px ; padding-right:50px ; display: flex; align-items: center;flex-wrap: wrap;">
+    <h1 style="display: block; width: 100%;text-decoration: underline;"><strong>HOLA MUNDO !</strong> Calcula el costo de tus productos</h1>
+    <form (ngSubmit)="agregarProducto()" [formGroup]="myForm" 
+          style="width: 30%;display: flex; justify-content: center; flex-wrap: wrap;  
+          border: 1px solid black;border-radius: 5px;">
+      <div style="display:flex;flex-direction: column;width: 100%; padding-bottom: 10px;padding-top: 10px; ">
+        <h3 style="text-align:center ;">Agregar productos</h3>
+      </div>
+      <div style="display:flex;flex-direction: column;width: 50%; padding: 5px; ">
+        <label for="">Nombre del articulo </label>
+        <input name="" formControlName="productName" type="text">
+      </div>
+      <div style="display:flex;flex-direction: column;width: 50%; padding: 5px; ">
+        <label for="">Valor Unitario </label>
+        <input name="" formControlName="value" type="text">
+      </div>
+      <div style="display:flex;flex-direction: column;width: 50%; padding: 5px; ">
+        <label for="">Cantidad </label>
+        <input name="" formControlName="cant" type="number">
+      </div>
+      <div style="display:flex;flex-direction: column;width: 50%; padding: 5px; ">
+        <label for="">Tipo de producto </label>
+        <select name="" formControlName="producType" >
+          <option value="1">Nacional</option>
+          <option value="2">Importado</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction: column;width: 100%; padding: 5px; ">
+        <label for="" >Descripción del producto </label>
+        <textarea name="" formControlName="description" cols="30" rows="10"></textarea>
+      </div>
+      <div style="display:flex;flex-direction: column;width: 50%; padding: 5px; ">
+        <button type="submit" style="background:#0F1166;color: white; border: 1px solid #0F1166;border-radius: 5px;padding: 2px;cursor: pointer;">Agregar Producto</button>
+      </div>
+    </form>
+    <div style="width: 70%;height: 70%; padding: 20px; ">
+
+      <table  *ngIf="!btnCalcular" 
+      style="display: block; width: 100%;height: 80%;margin-top: 15px; border: 1px solid black; border-radius: 5px; overflow-y: scroll;">
+        <tr style="height: 40px; background: #115E70; color: whitesmoke;display: flex;align-items: center;">
+          <th style="text-align: center;">Nombre del articulo</th>
+          <th style="text-align: center;">Valor Unitario</th>
+          <th style="text-align: center;">Cantidad</th>
+          <th style="text-align: center;">Tipo de producto</th>
+          <th style="text-align: center;">Descripción</th>
+        </tr>
+        <tr *ngFor="let item of productos" style="border: 1px solid rgba(0, 0, 0, 0.329);display: flex;align-items: center;padding: 2px;">
+          <td style="text-align: center;">{{item.productName}}</td>
+          <td style="text-align: center;">{{item.value}}</td>
+          <td style="text-align: center;">{{item.cant}}</td>
+          <td style="text-align: center;">{{item.producType === 1 ? 'Nacional':'Importado'}}</td>
+          <td style="text-align: center;border: none;">
+            <button style="background:#0F1166;color: white; 
+                          border: 1px solid #0F1166;border-radius: 5px;
+                          padding: 2px;cursor: pointer;"
+                    (click)="abrirAletar(item.description)">
+              Leer descripcion
+            </button>
+          </td>
+        </tr>
+      </table>
+
+      <table *ngIf="btnCalcular" style="display: block; width: 100%;height: 80%;margin-top: 15px; border: 1px solid black; border-radius: 5px; overflow-y: scroll;">
+        <tr style="height: 40px; background: #115E70; color: whitesmoke;display: flex;align-items: center;">
+          <th style="text-align: center;">IVA</th>
+          <th style="text-align: center;">Subtotal</th>
+          <th style="text-align: center;">Tipo de producto</th>
+          <th style="text-align: center;">Aracel</th>
+          <th style="text-align: center;">Total</th>
+        </tr>
+        <tr *ngFor="let item of productos" style="border: 1px solid rgba(0, 0, 0, 0.329);display: flex;align-items: center;padding: 2px; height: auto;">
+          <td style="text-align: center;">{{item.value * 0.19}}</td>
+          <td style="text-align: center;">{{item.value - (item.value * 0.19)}}</td>
+          <td style="text-align: center;">{{item.producType === "1" ? 'Nacional':'Importado'}}</td>
+          <td style="text-align: center;">{{item.producType === "2"? (item.value * item.cant)*0.05  : 0  }}</td>
+          <td style="text-align: center;">{{item.producType === "2"? (item.value * item.cant)*0.05 + (item.value * item.cant) : item.value * item.cant }}</td>
+        </tr>
+      </table>
+
+      <div style="width: 100%; height: 10%;display: flex;align-items: center;justify-content: space-between;">
+        <button *ngIf="btnCalcular" style="background:#309BF2;color: white; 
+                border: 1px solid #309BF2;border-radius:
+                  5px;padding: 2px;margin-left: 10px;cursor: pointer;"
+                  (click)="regresar()">
+            Regresar
+        </button>
+        <button *ngIf="btnCalcular" style="background:#DE2521;color: white; 
+                border: 1px solid #DE2521;border-radius:
+                 5px;padding: 2px;margin-left: 10px;cursor: pointer;"
+                 (click)="limpiarDatos()">
+            Limpiar
+        </button>
+        <button *ngIf="!btnCalcular" style="background:#309BF2;color: white; 
+                border: 1px solid #309BF2;border-radius:
+                 5px;padding: 2px;margin-left: 10px;cursor: pointer;"
+                 (click)="calcularDatos()">
+            Calcular
+        </button>
+      </div>
+    </div>
+  </div>
+  <div style="height:10%; width:100% ;background:#395973 ; display: flex; justify-content: center; align-items: center;">
+    <p  style="color:white;text-align: center;">
+      Politecnico internacional <br> Miguel Angel Vasquez Osorio &copy; 2022 
+    </p>
+  </div>
+</div>
